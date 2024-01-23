@@ -20,7 +20,7 @@
                 <div>
                     <form action="" id=form>Search for a city
                         <input type="text" id="Search_input">
-                        <button type="submit" id="search_button">Search</button>
+                        <button class="btn btn-primary" type="submit" id="search_button">Search</button>
                     </form>
                 </div>
                 <div>
@@ -29,7 +29,7 @@
                 </div>
             </div>
         </div>
-        <!-- display search city results -->
+       
 
         <div>
             <div>
@@ -37,23 +37,23 @@
                     <h3 id="current_city">City Search Info</h3>
                     <p id="current_date"></p>
                 </div>
+                <img id="weather_icon0" src="" alt="weather_icon0">
+
                 <p id="current_temperature">temp</p>
                 <p id="current_wind">wind</p>
                 <p id="current_humidity">humidity</p>
                 <div>
                 </div>
                 <h3 id="Forecast">5 Day Forecast</h3>
-                <!-- forecast one -->
                 <div class="forecast_fiveday">
                     <div>
                         <p id="week_date0">date</p>
-                        <img src="" alt="weather_icon0">
+                        <img id="weather_icon0" src="" alt="weather_icon0">
                         <p id="week_temp0">temp</p>
                         <p id="week_wind0">wind</p>
                         <p id="week_humidity0">humidity</p>
 
                     </div>
-                    <!-- forecast two-->
                     <div>
                         <p id="week_date1">date</p>
                         <img src="" alt="weather_icon1">
@@ -62,7 +62,6 @@
                         <p id="week_humidity1">humidity</p>
 
                     </div>
-                    <!-- forecast three-->
                     <div>
                         <p id="week_date2">date</p>
                         <img src="" alt="weather_icon2">
@@ -71,7 +70,6 @@
                         <p id="week_humidity2">humidity</p>
 
                     </div>
-                    <!-- forecast four -->
                     <div>
                         <p id="week_date3">date</p>
                         <img src="" alt="weather_icon3">
@@ -80,7 +78,7 @@
                         <p id="week_humidity3">humidity</p>
 
                     </div>
-                    <!-- forecast five -->
+                   
                     <div>
                         <p id="week_date4">date</p>
                         <img src="" alt="weather_icon4">
@@ -94,9 +92,7 @@
         </div>
     </div>
     <script src="./script.js"></script>
-    <!-- link to jquery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-    <script src="jquery-3.7.1.min.js"></script>
 </body>
 
 </html>

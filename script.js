@@ -22,9 +22,9 @@ if (localStorage.getItem("pastCitySearches")) {
 }
 // fuctions
 function getSearch(event) {
-
-    var currentDate = moment().format("M/D/YYYY");
-    var coordsURL = `https://api.openweathermap.org/data/2.5/weather?q=${searchInput.value}&appid=${apikey}`
+    event.preventDefault()
+    var date = moment().format("M/D/YYYY");
+    var coordsURL = `https://api.openweathermap.org/data/2.5/weather?q=${searchInput.value}&appid=${apikey}&units=imperial`
         ;
     console.log(coordsURL);
     fetch(coordsURL)
@@ -32,53 +32,52 @@ function getSearch(event) {
             return response.json();
         })
         .then(function (locData) {
-            console.log(locData);
-            var cityLat = locData.coord.lat;
-            var cityLon = locData.coord.lon;
             var part = "minutely, hourly, alerts";
-            var urlQuery = "https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={apikey}"
+            var urlQuery = `https://api.openweathermap.org/data/2.5/forecast?q=${searchInput.value}&appid=${apikey}&units=imperial`
+            fetch(urlQuery)
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    console.log(data);
+                    
+                    currentDate.textContent = date;
+                    var iconWeather = locData.weather[0].icon;
+                    var iURL = "http://openweathermap.org/img/w/" + iconWeather + ".png";
+                    document.querySelector('#weather_icon0').setAttribute('src', iURL);
+
+                    currentCity.textContent = locData.name + " (" + currentDate + ")";
+                    currentTemp.textContent = "temp" + (((parseInt(locData.main.temp) - 273.15) * 1.80) + 32).toFixed(2)
+                        + "°F";
+                    currentWind.textContent = "wind" + (locData.main.wind) + "MPH";
+                    currentHumidity.textContent = "humidity" + currentHumidity + (locData.main.humidity) + "%";
+
+                    var pastCity = locData.name;
+                    pastCitySearches.push(pastCity);
+                    localStorage.setItem("pastCitySearches", JSON.stringify(pastCitySearches));
+
+
+                    for (var i = 0; i < 5; i++) {
+                        var minTemp = data.daily[i].temp.min;
+                        var maxTemp = data.daily[i].temp.max;
+                        var dayHumidity = data.daily[i].humidity;
+                        var dayWind = data.daily[i].wind_speed;
+                        var dayDate = moment().add(i + 1, "days").format("M/D/YYYY");
+                        var iconCode = data.daily[i].weather[0].icon;
+                        var iconURL = "http://openweathermap.org/img/w/" + iconCode + ".png";
+                        
+
+                        $('#img' + i).attr('src', iconURL);
+
+                        document.getElementById('week_date' + i).textContent = dayDate;
+                        document.getElementById('week_tempMax' + i).textContent = "Max_Temp: " + (((parseInt(maxTemp) - 273.15) * 1.80) + 32).toFixed(2) + "°F";
+                        document.getElementById('week_tempMin' + i).textContent = "Min_Temp: " + (((parseInt(minTemp) - 273.15) * 1.80) + 32).toFixed(2) + "°F";
+                        document.getElementById('week_wind' + i).textContent = "wind: " + dayWind + "MPH";
+                        document.getElementById('week_humidity' + i).textContent = "Humidity: " + dayHumidity + "%";
+
+                    }
+                })
         });
-    fetch(urlQuery)
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (data) {
-            console.log(data);
-
-            var iconWeather = locData.weather[0].icon;
-            var iURL = "http://openweathermap.org/img/w/" + iconWeather + ".png";
-            $('#weather-icon').attr('src', iURL);
-
-            currentCity.textContent = locData.name + " (" + currentDate + ")";
-            currentTemp.textContent = "Temp: " + (((parseInt(locData.main.temp) - 273.15) * 1.80) + 32).toFixed(2)
-                + "°F";
-            currentWind.textContent = "Wind: " + data.current.wind_speed + "MPH";
-            currentHumidity.textContent = "Humidity: " + data.current.humidity + "%";
-
-            var pastCity = locData.name;
-            pastCitySearches.push(pastCity)
-            localStorage.setItem("pastCitySearches", JSON.stringify(pastCitySearches));
-
-
-            for (var i = 0; i < 5; i++) {
-                var minTemp = data.daily[i].temp.min;
-                var maxTemp = data.daily[i].temp.max;
-                var dayHumidity = data.daily[i].humidity;
-                var dayWind = data.daily[i].wind_speed;
-                var dayDate = moment().add(i + 1, "days").format("M/D/YYYY");
-                var iconCode = data.daily[i].weather[0].icon;
-                var iconURL = "http://openweathermap.org/img/w/" + iconCode + ".png";
-
-                $('#img' + i).attr('src', iconURL);
-
-                document.getElementById('week_date' + i).textContent = dayDate;
-                document.getElementById('week_tempMax' + i).textContent = "Max Temp: " + (((parseInt(maxTemp) - 273.15) * 1.80) + 32).toFixed(2) + "°F";
-                document.getElementById('week_tempMin' + i).textContent = "Min Temp: " + (((parseInt(minTemp) - 273.15) * 1.80) + 32).toFixed(2) + "°F";
-                document.getElementById('week_wind' + i).textContent = "wind: " + dayWind + "MPH";
-                document.getElementById('week_humidity' + i).textContent = "Humidity: " + dayHumidity + "%";
-
-            }
-        })
 
 
 };
@@ -101,4 +100,4 @@ function renderPastSearch() {
     };
 }
 // event listeners
-$("#search_button").on("click", getSearch);
+document.querySelector("#search_button").addEventListener("click", getSearch);
